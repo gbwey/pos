@@ -1,0 +1,7 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "pos:lib"
+
+    - path: "./test"
+      component: "pos:test:pos-test"

@@ -1,0 +1,59 @@
+name:                pos
+version:             0.1.0.0
+synopsis:            positive numbers
+description:
+  A library for representing positive integers.
+  .
+  Useful for handling nonempty containers and fixed containers.
+
+homepage:            https://github.com/gbwey/pos#readme
+license:             BSD3
+author:              Grant Weyburne <gbwey9@gmail.com>
+maintainer:          Grant Weyburne <gbwey9@gmail.com>
+copyright:           2022 Grant Weyburne
+category:            Data, Numeric
+
+github: gbwey/pos.git
+
+dependencies:
+- base >= 4.7 && < 5
+- deepseq
+
+library:
+  source-dirs: src
+  ghc-options:
+  - -Wall
+  - -Wcompat
+  - -Wincomplete-record-updates
+  - -Wincomplete-uni-patterns
+  - -Wpartial-fields
+  - -Wunused-type-patterns
+  - -Wredundant-constraints
+  - -Wmonomorphism-restriction
+  - -Wmissing-deriving-strategies
+  - -Wmissing-local-signatures
+  - -Wmissing-export-lists
+  - -Widentities
+
+tests:
+  pos-test:
+    main:                Main.hs
+    source-dirs:
+    - test
+    ghc-options:
+    - -Wall
+    - -Wcompat
+    - -Wincomplete-record-updates
+    - -Wincomplete-uni-patterns
+    - -Wpartial-fields
+    - -Wunused-type-patterns
+    - -Wredundant-constraints
+    - -Wmissing-deriving-strategies
+    - -Widentities
+    - -Wno-missing-export-lists
+    - -Wno-missing-local-signatures
+    dependencies:
+    - base
+    - pos
+    - tasty
+    - tasty-hunit
