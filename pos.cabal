@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           pos
-version:        0.1.0.0
+version:        0.2.0.0
 synopsis:       positive numbers
 description:    A library for representing positive integers. . Useful for handling nonempty containers and fixed containers.
 category:       Data, Numeric

@@ -2,8 +2,8 @@
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE ScopedTypeVariables #-}
@@ -74,7 +74,7 @@ module Data.Pos (
   type PosT,
   fromN,
   fromNP,
-  NSC (..),
+  NS (..),
 
   -- ** miscellaneous
 
@@ -277,20 +277,23 @@ type family FailUnless b err where
   FailUnless 'False err = GL.TypeError ( 'GL.Text "FailUnless: " 'GL.:<>: err)
   FailUnless 'True _ = ()
 
--- | conversion from nonempty list of Nats to Positives
-type NSC :: NonEmpty Nat -> Constraint
-class NSC ns where
+-- | conversion from list of Nats to Positives
+type NS :: [Nat] -> Constraint
+class NS ns where
   fromNSP :: NonEmpty Pos
   fromNSTotalP :: Pos
   fromNSTotalP = productP (fromNSP @ns)
   nsLengthP :: Pos
 
-instance PosT n => NSC (n ':| '[]) where
+instance GL.TypeError ( 'GL.Text "NS: empty dimensions are not supported") => NS '[] where
+  fromNSP = error "fromNSP: should not be here"
+  nsLengthP = error "fromNSP: should not be here"
+instance PosT n => NS '[n] where
   fromNSP = fromNP @n :| []
   nsLengthP = _1P
-instance (PosT n, NSC (n1 ':| ns)) => NSC (n ':| n1 ': ns) where
-  fromNSP = fromNP @n N.<| fromNSP @(n1 ':| ns)
-  nsLengthP = succP (nsLengthP @(n1 ':| ns))
+instance (PosT n, NS (n1 ': ns)) => NS (n ': n1 ': ns) where
+  fromNSP = fromNP @n N.<| fromNSP @(n1 ': ns)
+  nsLengthP = succP (nsLengthP @(n1 ': ns))
 
 -- | construct a valid 'Pos' using a 'Nat'
 _P :: forall n. PosT n => Pos

@@ -3,7 +3,6 @@
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeApplications #-}
-{-# LANGUAGE TypeOperators #-}
 
 module Main where
 
@@ -43,8 +42,8 @@ suite =
     , testCase "reads space between" $ reads @Pos " 9 P" @?= []
     , testCase "reads leading spaces and extra" $ reads @Pos " 9P xyz" @?= [(_9P, " xyz")]
     , testCase "reads leading spaces and extra" $ reads @Pos "   123P" @?= [(_P @123, "")]
-    , testCase "fromNSP" $ fromNSP @(4 ':| '[]) @?= (_4P :| [])
-    , testCase "fromNSP" $ fromNSP @(4 ':| '[6, 3]) @?= (_4P :| [_6P, _3P])
+    , testCase "fromNSP" $ fromNSP @'[4] @?= (_4P :| [])
+    , testCase "fromNSP" $ fromNSP @'[4, 6, 3] @?= (_4P :| [_6P, _3P])
     , testCase "fromNP 1" $ fromNP @1 @?= _1P
     , testCase "fromNP 2" $ fromNP @2 @?= _2P
     , testCase "fromNP 3" $ fromNP @3 @?= _3P
@@ -68,10 +67,10 @@ suite =
     , testCase "fromN 4" $ fromN @4 @?= 4
     , testCase "fromN 1" $ fromN @1 @?= 1
     , testCase "fromNSTotalP" $
-        fromNSTotalP @(2 ':| '[3, 20])
+        fromNSTotalP @'[2, 3, 20]
           @?= _P @120
     , testCase "fromNSP" $
-        fromNSP @(2 ':| '[3, 20])
+        fromNSP @'[2, 3, 20]
           @?= _2P :| [_3P, _20P]
     , testCase "pPosInt" $
         P.readP_to_S pPosInt "  12xyz"
