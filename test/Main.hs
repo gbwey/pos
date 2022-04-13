@@ -33,15 +33,15 @@ suite =
     , testCase "productP" $ productP (_4P :| []) @?= _4P
     , testCase "productP" $ productP [_4P, _5P] @?= _P @20
     , testCase "productP" $ productP [_4P] @?= _4P
-    , testCase "read" $ unP (read @Pos "1325P") @?= 1325
-    , testCase "read" $ read @Pos "1325P" @?= _P @1325
-    , testCase "show" $ show (_P @1325) @?= "1325P"
+    , testCase "read" $ unP (read @Pos "_1325P") @?= 1325
+    , testCase "read" $ read @Pos "_1325P" @?= _P @1325
+    , testCase "show" $ show (_P @1325) @?= "_1325P"
     , testCase "read/show" $ read @Pos (show (_P @1325)) @?= _P @1325
     , testCase "reads 0" $ reads @Pos "0P" @?= []
     , testCase "reads -4" $ reads @Pos "-4P" @?= []
     , testCase "reads space between" $ reads @Pos " 9 P" @?= []
-    , testCase "reads leading spaces and extra" $ reads @Pos " 9P xyz" @?= [(_9P, " xyz")]
-    , testCase "reads leading spaces and extra" $ reads @Pos "   123P" @?= [(_P @123, "")]
+    , testCase "reads leading spaces and extra" $ reads @Pos " _9P xyz" @?= [(_9P, " xyz")]
+    , testCase "reads leading spaces and extra" $ reads @Pos "   _123P" @?= [(_P @123, "")]
     , testCase "fromNSP" $ fromNSP @'[4] @?= (_4P :| [])
     , testCase "fromNSP" $ fromNSP @'[4, 6, 3] @?= (_4P :| [_6P, _3P])
     , testCase "fromNP 1" $ fromNP @1 @?= _1P
@@ -76,7 +76,7 @@ suite =
         P.readP_to_S pPosInt "  12xyz"
           @?= [(_1P, "2xyz"), (_12P, "xyz")] -- ambiguous
     , testCase "pPos" $
-        P.readP_to_S pPos "  12Pxyz"
+        P.readP_to_S pPos "  _12Pxyz"
           @?= [(_12P, "xyz")]
     , testCase "pPosInt" $
         P.readP_to_S pPosInt "  10xyz"
@@ -85,7 +85,7 @@ suite =
         P.readP_to_S pPosInt "  023xyz"
           @?= [(_2P, "3xyz"), (_P @23, "xyz")]
     , testCase "pPos" $
-        P.readP_to_S pPos "  12P xyz"
+        P.readP_to_S pPos "  _12P xyz"
           @?= [(_12P, " xyz")]
     , testCase "readP pPositives" $
         P.readP_to_S ((,) <$> pInt <* P.char '@' <*> pPositives '{' '}') "1444@{1}"

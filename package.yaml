@@ -1,5 +1,5 @@
 name:                pos
-version:             0.2.0.0
+version:             0.3.0.0
 synopsis:            positive numbers
 description:
   A library for representing positive integers.
@@ -13,7 +13,7 @@ maintainer:          Grant Weyburne <gbwey9@gmail.com>
 copyright:           2022 Grant Weyburne
 category:            Data, Numeric
 
-github: gbwey/pos.git
+github: gbwey/pos
 
 dependencies:
 - base >= 4.7 && < 5

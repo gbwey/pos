@@ -64,23 +64,17 @@ module Data.Pos (
   divModP,
   divModNextP,
   maxP,
-
-  -- ** enums
   predP,
   succP,
-  posRange,
 
   -- ** type level
-  type PosT,
-  fromN,
-  fromNP,
+  PosC (..),
   NS (..),
 
   -- ** miscellaneous
-
-  -- _Pos,
   fromPositives,
   toPositives,
+  posRange,
 
   -- * parsers
   pPositives,
@@ -116,7 +110,7 @@ newtype Pos = Pos' Int
   deriving newtype (NFData)
 
 instance Show Pos where
-  showsPrec _ (Pos i) = showsPrec 11 i . showChar 'P'
+  showsPrec _ (Pos i) = showChar '_' . showsPrec 11 i . showChar 'P'
 
 -- | readonly pattern synonym for 'Pos'
 {-# COMPLETE Pos #-}
@@ -127,17 +121,20 @@ pattern Pos n <- Pos' n
 -- | parser for an 'Int'
 pInt :: P.ReadP Int
 pInt = do
-  P.skipSpaces
   ii <- P.many1 (P.satisfy isDigit)
   maybe P.pfail pure (readMaybe @Int ii)
 
 -- | parser for a 'Pos'
 pPos :: P.ReadP Pos
-pPos = pPosInt <* P.char 'P'
+pPos = P.skipSpaces *> P.char '_' *> pPosInt' <* P.char 'P'
+
+-- | parser for a 'Pos' but just reading in a positive number
+pPosInt :: P.ReadP Pos
+pPosInt = P.skipSpaces *> pPosInt'
 
 -- | parser for an int converted positive number
-pPosInt :: P.ReadP Pos
-pPosInt = do
+pPosInt' :: P.ReadP Pos
+pPosInt' = do
   i <- pInt
   either (const empty) return (eitherPos i)
 
@@ -245,32 +242,27 @@ predP :: Pos -> Either String Pos
 predP (Pos n) = eitherPos (n - 1)
 {-# INLINE predP #-}
 
--- | converts a restricted (positive) 'Nat' to an 'Int'
-fromN :: forall n. PosT n => Int
-fromN = pnat @n
-{-# INLINE fromN #-}
-
--- | converts a 'Nat' to a 'Pos'
-fromNP :: forall n. PosT n => Pos
-fromNP = case eitherPos $ pnat @n of
-  Left e -> error $ "fromNP:" ++ e -- shouldnt fail because of PosT constraint
-  Right p -> p
-{-# INLINE fromNP #-}
-
 -- | extract an 'Int' from a 'Nat'
 pnat :: forall n. GL.KnownNat n => Int
 pnat = fromInteger (GL.natVal (Proxy @n))
 
--- | constraint that limits to positive 'Nat'
-type PosT :: Nat -> Constraint
-type PosT n =
+-- | constraint for positive numbers
+type PosC :: Nat -> Constraint
+class KnownNat n => PosC n where
+  fromNP :: Pos
+  fromN :: Int
+  fromN = unP (fromNP @n)
+instance
   ( KnownNat n
   , FailUnless
       (1 GL.<=? n)
-      ( 'GL.Text "PosT n: requires n >= 1 but found "
+      ( 'GL.Text "PosC n: requires n >= 1 but found "
           'GL.:<>: 'GL.ShowType n
       )
-  )
+  ) =>
+  PosC n
+  where
+  fromNP = unsafePos "fromN" (pnat @n)
 
 type FailUnless :: Bool -> GL.ErrorMessage -> Constraint
 type family FailUnless b err where
@@ -288,15 +280,15 @@ class NS ns where
 instance GL.TypeError ( 'GL.Text "NS: empty dimensions are not supported") => NS '[] where
   fromNSP = error "fromNSP: should not be here"
   nsLengthP = error "fromNSP: should not be here"
-instance PosT n => NS '[n] where
+instance PosC n => NS '[n] where
   fromNSP = fromNP @n :| []
   nsLengthP = _1P
-instance (PosT n, NS (n1 ': ns)) => NS (n ': n1 ': ns) where
+instance (PosC n, NS (n1 ': ns)) => NS (n ': n1 ': ns) where
   fromNSP = fromNP @n N.<| fromNSP @(n1 ': ns)
   nsLengthP = succP (nsLengthP @(n1 ': ns))
 
 -- | construct a valid 'Pos' using a 'Nat'
-_P :: forall n. PosT n => Pos
+_P :: forall n. PosC n => Pos
 _P = Pos' (pnat @n)
 
 -- | converts a container of positives to a list of ints
@@ -308,7 +300,7 @@ toPositives :: Foldable t => t Int -> Either String (NonEmpty Pos)
 toPositives is = do
   ps <- traverse eitherPos (toList is)
   case ps of
-    [] -> Left "empty"
+    [] -> Left "toPositives: empty"
     x : xs -> Right (x :| xs)
 
 -- | enumerate a nonempty list of 'Pos' from "i" to "j"

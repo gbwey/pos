@@ -5,12 +5,12 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           pos
-version:        0.2.0.0
+version:        0.3.0.0
 synopsis:       positive numbers
 description:    A library for representing positive integers. . Useful for handling nonempty containers and fixed containers.
 category:       Data, Numeric
 homepage:       https://github.com/gbwey/pos#readme
-bug-reports:    https://github.com/gbwey/pos.git/issues
+bug-reports:    https://github.com/gbwey/pos/issues
 author:         Grant Weyburne <gbwey9@gmail.com>
 maintainer:     Grant Weyburne <gbwey9@gmail.com>
 copyright:      2022 Grant Weyburne
@@ -20,7 +20,7 @@ build-type:     Simple
 
 source-repository head
   type: git
-  location: https://github.com/gbwey/pos.git
+  location: https://github.com/gbwey/pos
 
 library
   exposed-modules:
