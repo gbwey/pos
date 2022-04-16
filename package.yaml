@@ -4,7 +4,7 @@ synopsis:            positive numbers
 description:
   A library for representing positive integers.
   .
-  Useful for handling nonempty containers and fixed containers.
+  Please see the README on GitHub at <https://github.com/gbwey/pos#readme>
 
 homepage:            https://github.com/gbwey/pos#readme
 license:             BSD3

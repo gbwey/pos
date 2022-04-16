@@ -7,7 +7,7 @@ cabal-version: 1.12
 name:           pos
 version:        0.3.0.0
 synopsis:       positive numbers
-description:    A library for representing positive integers. . Useful for handling nonempty containers and fixed containers.
+description:    A library for representing positive integers. . Please see the README on GitHub at <https://github.com/gbwey/pos#readme>
 category:       Data, Numeric
 homepage:       https://github.com/gbwey/pos#readme
 bug-reports:    https://github.com/gbwey/pos/issues
