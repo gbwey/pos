@@ -214,7 +214,7 @@ divModP i (Pos n) = second toEnum (divMod i n) -- works fine
 
 -- | safely divide 'Pos' values but the result is increased by one to guarantee the result is still positive
 safeDivP :: Pos -> Pos -> Pos -- have to completely spell it out! else liquid gets confused
-safeDivP (Pos i) (Pos j) = Pos' (mod i j + 1)
+safeDivP (Pos i) (Pos j) = Pos' (div i j + 1)
 {-# INLINE safeDivP #-}
 
 -- | product of list of 'Pos' values is always positive
