@@ -252,6 +252,7 @@ class KnownNat n => PosC n where
   fromNP :: Pos
   fromN :: Int
   fromN = unP (fromNP @n)
+
 instance
   ( KnownNat n
   , FailUnless

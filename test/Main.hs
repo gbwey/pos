@@ -47,8 +47,8 @@ suite =
     , testCase "toPositives" $ toPositives [] @?= Left "toPositives: empty"
     , testCase "toPositives" $ toPositives [-3] @?= Left "eitherPos: i<=0: found -3"
     , testCase "toPositives" $ toPositives [0] @?= Left "eitherPos: i<=0: found 0"
-    , testCase "toPositives" $ toPositives [1,2,0,4] @?= Left "eitherPos: i<=0: found 0"
-    , testCase "toPositives" $ toPositives [5,2,1] @?= Right (_5P :| [_2P, _1P])
+    , testCase "toPositives" $ toPositives [1, 2, 0, 4] @?= Left "eitherPos: i<=0: found 0"
+    , testCase "toPositives" $ toPositives [5, 2, 1] @?= Right (_5P :| [_2P, _1P])
     , testCase "productP" $ productP [] @?= _1P
     , testCase "productP" $ productP (_3P :| [_1P, _5P, _7P]) @?= _P @105
     , testCase "productP" $ productP (_4P :| []) @?= _4P
@@ -94,7 +94,7 @@ suite =
         nsLengthP @'[99]
           @?= _1P
     , testCase "nsLengthP" $
-        nsLengthP @'[1,2,3,4,5,6,7,8,999]
+        nsLengthP @'[1, 2, 3, 4, 5, 6, 7, 8, 999]
           @?= _9P
     , testCase "fromNSTotalP" $
         fromNSTotalP @'[2, 3, 20]
@@ -103,7 +103,7 @@ suite =
         fromNSTotalP @'[1]
           @?= _1P
     , testCase "fromNSTotalP" $
-        fromNSTotalP @'[1,2,3,4,5,6,7,1,1]
+        fromNSTotalP @'[1, 2, 3, 4, 5, 6, 7, 1, 1]
           @?= _P @5040
     , testCase "fromNSP" $
         fromNSP @'[2, 3, 20]
@@ -141,13 +141,12 @@ suite =
     , testCase "safeDivP" $ safeDivP _10P _15P @?= _1P
     , testCase "safeDivP" $ safeDivP (_P @100) _7P @?= _15P
     , testCase "safeDivP" $ safeDivP _10P _10P @?= _2P
-    , testCase "divModNextP" $ divModNextP 10 _10P @?= (1,_1P)
-    , testCase "divModNextP" $ divModNextP 100 _7P @?= (14,_3P)
-    , testCase "divModNextP" $ divModNextP 2 _20P @?= (0,_3P)
-    , testCase "divModNextP" $ divModNextP 10 _6P @?= (1,_5P)
-    , testCase "divModP" $ divModP 10 _10P @?= (1,0)
-    , testCase "divModP" $ divModP 100 _7P @?= (14,2)
-    , testCase "divModP" $ divModP 2 _20P @?= (0,2)
-    , testCase "divModP" $ divModP 10 _6P @?= (1,4)
-
+    , testCase "divModNextP" $ divModNextP 10 _10P @?= (1, _1P)
+    , testCase "divModNextP" $ divModNextP 100 _7P @?= (14, _3P)
+    , testCase "divModNextP" $ divModNextP 2 _20P @?= (0, _3P)
+    , testCase "divModNextP" $ divModNextP 10 _6P @?= (1, _5P)
+    , testCase "divModP" $ divModP 10 _10P @?= (1, 0)
+    , testCase "divModP" $ divModP 100 _7P @?= (14, 2)
+    , testCase "divModP" $ divModP 2 _20P @?= (0, 2)
+    , testCase "divModP" $ divModP 10 _6P @?= (1, 4)
     ]
